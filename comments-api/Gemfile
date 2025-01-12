@@ -59,3 +59,4 @@ group :test do
 end
 
 gem "pg", "~> 1.5"
+gem 'rspec_api_documentation'
