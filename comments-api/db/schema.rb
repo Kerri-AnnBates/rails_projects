@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_01_14_004017) do
+ActiveRecord::Schema[7.2].define(version: 2025_01_14_022155) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -26,6 +26,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_14_004017) do
     t.datetime "updated_at", null: false
     t.string "content", null: false
     t.integer "score", default: 0, null: false
+    t.uuid "account_id", null: false
+    t.uuid "reply_id", null: false
+    t.index ["account_id"], name: "index_comments_on_account_id"
+    t.index ["reply_id"], name: "index_comments_on_reply_id"
   end
 
   create_table "replies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -34,7 +38,11 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_14_004017) do
     t.string "content"
     t.integer "score"
     t.string "reply_to"
-    t.uuid "parent_id"
-    t.uuid "account_id"
+    t.uuid "account_id", null: false
+    t.index ["account_id"], name: "index_replies_on_account_id"
   end
+
+  add_foreign_key "comments", "accounts"
+  add_foreign_key "comments", "replies"
+  add_foreign_key "replies", "accounts"
 end
