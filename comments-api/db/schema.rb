@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_01_13_000210) do
+ActiveRecord::Schema[7.2].define(version: 2025_01_14_004017) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -19,7 +19,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_13_000210) do
     t.datetime "updated_at", null: false
     t.string "username"
     t.string "image"
-    t.integer "account_id"
   end
 
   create_table "comments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -29,13 +28,13 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_13_000210) do
     t.integer "score", default: 0, null: false
   end
 
-  create_table "replies", force: :cascade do |t|
+  create_table "replies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "content"
     t.integer "score"
     t.string "reply_to"
-    t.integer "parent_id"
-    t.integer "account_id"
+    t.uuid "parent_id"
+    t.uuid "account_id"
   end
 end
