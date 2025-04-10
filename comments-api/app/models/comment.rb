@@ -1,6 +1,9 @@
 class Comment < ApplicationRecord
-  has_many :replies, dependent: :destroy
-  belongs_to :account
+  enum comment_type: { comment: 0, reply: 1 }
 
-  validate :content, presence: true
+  belongs_to :account
+  belongs_to :parent, class_name: 'Comment', optional: true
+  has_many :replies, class_name: 'Comment', foreign_key: 'parent_id', dependent: :destroy
+
+  validates :content, presence: true
 end
