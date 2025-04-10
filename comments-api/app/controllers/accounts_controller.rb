@@ -1,14 +1,16 @@
 class AccountsController < ApplicationController
+  before_action :find_account, only: [:show]
+
   def index
-    render json: Account.all
+    respond_with(Account.all)
   end
 
   def show
-    render json: find_user
+    respond_with(@account)
   end
 
   private
-  def find_user
-    Account.find(params[:id])
+  def find_account
+    @account = Account.find(params[:id])
   end
 end
