@@ -6,12 +6,24 @@ class CommentsController < ApplicationController
   end
 
   def create
-    @comment = Comment.create(comment_params)
+    args = comment_params
+    account = verify_account(args[:account_id])
+    return unless account.is_a?(Account)
+
+    # Check if reply
+    if args[:parent_id].present?
+      comment = verify_parent_comment(args[:parent_id])
+      return unless comment.is_a?(Comment)
+
+      args = args.merge(comment_type: :reply)
+    end
+
+    @comment = Comment.create(args)
 
     if @comment.save
       respond_with(@comment)
     else
-      respond_with_bad_request
+      render json: { errors: @comment.errors.full_messages }, status: :unprocessable_entity
     end
   rescue => e
     puts "Error: #{e.class} - #{e.message}"
@@ -33,12 +45,25 @@ class CommentsController < ApplicationController
   private
   def verify_comment
     @comment = Comment.find([params[:id]])
-    respond_not_found("Comment with id #{params[:id]} not found!") unless @comment
+  rescue => error
+    respond_not_found(error)
+  end
+
+  def verify_parent_comment(comment_id)
+    Comment.find(comment_id)
+  rescue => error
+    respond_not_found(error)
+  end
+
+  def verify_account(account_id)
+    Account.find(account_id)
+  rescue => error
+    respond_not_found(error)
   end
 
   def comment_params
-    params.require(:comment).permit(:content, :account_id)
+    params.require(:comment).permit(:content, :account_id, :parent_id)
   rescue => error
-    puts error
+    respond_with_bad_request(error)
   end
 end

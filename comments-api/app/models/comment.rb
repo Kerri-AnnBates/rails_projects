@@ -1,5 +1,5 @@
 class Comment < ApplicationRecord
-  enum comment_type: { comment: 0, reply: 1 }
+  enum :comment_type, { comment: 0, reply: 1 }
 
   belongs_to :account
   belongs_to :parent, class_name: 'Comment', optional: true

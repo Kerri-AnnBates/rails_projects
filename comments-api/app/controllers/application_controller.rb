@@ -7,11 +7,11 @@ class ApplicationController < ActionController::API
     render json: {}, status: 204
   end
 
-  def respond_not_found(error = 'Not found!')
-    render json: {error: error}, status: :not_found
+  def respond_not_found(error)
+    render json: { error: 'Not Found!', message: error.message }, status: :not_found
   end
 
-  def respond_with_bad_request(error = 'Bad request!')
-    render json: {error: error}, status: :bad_request
+  def respond_with_bad_request(error)
+    render json: { error: 'Bad Request!', message: error.message}, status: :bad_request
   end
 end
