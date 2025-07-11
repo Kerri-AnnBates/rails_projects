@@ -53,10 +53,10 @@ group :development do
 end
 
 group :test do
-  # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
+  # Use system testing [https://guidgses.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
 end
 
 gem "pg", "~> 1.5"
-gem 'rspec_api_documentation'
+gem "factory_bot_rails"
