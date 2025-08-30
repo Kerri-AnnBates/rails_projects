@@ -21,7 +21,7 @@ class CommentsController < ApplicationController
     @comment = Comment.create(args)
 
     if @comment.save
-      respond_with(@comment)
+      respond_with(@comment, :created)
     else
       render json: { errors: @comment.errors.full_messages }, status: :unprocessable_entity
     end
