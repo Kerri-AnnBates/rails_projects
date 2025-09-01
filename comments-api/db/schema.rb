@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_01_14_004001) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_01_000122) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -19,6 +19,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_14_004001) do
     t.datetime "updated_at", null: false
     t.string "username"
     t.string "image"
+    t.string "password_digest"
   end
 
   create_table "comments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
