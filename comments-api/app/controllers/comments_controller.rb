@@ -18,6 +18,7 @@ class CommentsController < ApplicationController
       args = args.merge(comment_type: :reply)
     end
 
+    # TODO: take a look at this, to see if json renders, might need to switch to Comment.new()
     @comment = Comment.create(args)
 
     if @comment.save
@@ -46,19 +47,19 @@ class CommentsController < ApplicationController
   def verify_comment
     @comment = Comment.find([params[:id]])
   rescue => error
-    respond_not_found(error)
+    respond_not_found(error.message)
   end
 
   def verify_parent_comment(comment_id)
     Comment.find(comment_id)
   rescue => error
-    respond_not_found(error)
+    respond_not_found(error.message)
   end
 
   def verify_account(account_id)
     Account.find(account_id)
   rescue => error
-    respond_not_found(error)
+    respond_not_found(error.message)
   end
 
   def comment_params
