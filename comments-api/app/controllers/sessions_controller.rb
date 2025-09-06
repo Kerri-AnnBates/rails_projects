@@ -3,15 +3,15 @@ class SessionsController < ApplicationController
     account = Account.find_by(username: params[:username])
 
     if account && account.authenticate(params[:password])
-      session[:account_id] = account.id
-      render json: account, status: :created
+      payload = { account_id: account.id, exp: 24.hours.from_now.to_i }
+      token = JWT.encode(payload, Rails.application.secret_key_base)
+      render json: { token: token, account: account }, status: :ok
     else
       respond_with_unauthorized("Invalid username or password")
     end
   end
 
   def destroy
-    session.delete :account_id
-    head :no_content
+    render json: { message: "Logged out" }, status: :ok
   end
 end
