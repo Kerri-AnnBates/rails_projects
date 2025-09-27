@@ -30,4 +30,13 @@ class ApplicationController < ActionController::API
   def respond_with_unauthorized(error_message)
     render json: { error: "Unauthorized!", message: error_message }, status: :unauthorized
   end
+
+  private
+  def authenticate_token
+    header = request.headers['Authorization']
+
+    if header.present?
+      token = header.gsub('Bearer ', '')
+    end
+  end
 end

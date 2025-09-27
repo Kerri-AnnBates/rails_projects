@@ -5,6 +5,6 @@ Rails.application.routes.draw do
     resources :replies, only: [:index, :show, :create, :update, :destroy], controller: "comments"
   end
 
-  post "/login", to: "sessions#create"
-  delete "/logout", to: "sessions#destroy"
+  post "/login", to: "auth#create"
+  delete "/logout", to: "auth#destroy"
 end
