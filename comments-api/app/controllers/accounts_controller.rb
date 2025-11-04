@@ -1,6 +1,7 @@
 class AccountsController < ApplicationController
   before_action :find_account, only: [ :show ]
   before_action :confirm_uniqueness, only: [ :create ]
+  skip_before_action :authenticate_requests, only: [ :create ]
 
   def index
     respond_with(Account.all)
@@ -31,7 +32,7 @@ class AccountsController < ApplicationController
       respond_with_conflict_error("Username already taken")
     end
   end
-  
+
   def account_params
     params.permit(:username, :password)
   rescue => error

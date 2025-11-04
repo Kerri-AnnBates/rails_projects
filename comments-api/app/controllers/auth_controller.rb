@@ -1,4 +1,6 @@
 class AuthController < ApplicationController
+  skip_before_action :authenticate_requests, only: [:login]
+
   def login
     account = Account.find_by(username: params[:username])
 
@@ -9,9 +11,5 @@ class AuthController < ApplicationController
     else
       respond_with_unauthorized("Invalid username or password")
     end
-  end
-
-  def logout
-    render json: { message: "Logged out" }, status: :ok
   end
 end
