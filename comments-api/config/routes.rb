@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  resources :accounts
+  resources :accounts, only: [:index, :show, :create]
 
   resources :comments, only: [:index, :show, :create, :update, :destroy] do
     resources :replies, only: [:index, :show, :create, :update, :destroy], controller: "comments"

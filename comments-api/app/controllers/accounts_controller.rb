@@ -19,7 +19,7 @@ class AccountsController < ApplicationController
   end
 
   def show
-    respond_with(@account)
+    render json: current_user
   end
 
   private
