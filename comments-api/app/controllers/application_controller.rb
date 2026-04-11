@@ -1,6 +1,10 @@
 class ApplicationController < ActionController::API
+  include Pundit::Authorization
+
   attr_reader :current_user
   before_action :authenticate_requests
+
+rescue_from Pundit::NotAuthorizedError, with: :respond_with_forbidden
 
   def respond_with(data, status = :ok)
     render json: data, status: status
@@ -32,6 +36,10 @@ class ApplicationController < ActionController::API
 
   def respond_with_unauthorized(error_message)
     render json: { error: "Unauthorized!", message: error_message }, status: :unauthorized
+  end
+
+  def respond_with_forbidden
+    render json: { error: "Forbidden!", message: "You are not authorized to perform this action" }, status: :forbidden
   end
 
   private

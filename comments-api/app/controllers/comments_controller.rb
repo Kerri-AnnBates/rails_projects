@@ -6,23 +6,25 @@ class CommentsController < ApplicationController
   end
 
   def create
+    args = comment_params
+
     # Check if reply
-    if comment_params[:parent_id].present?
-      comment = verify_parent_comment(comment_params[:parent_id])
+    if args[:parent_id].present?
+      comment = verify_parent_comment(args[:parent_id])
       return unless comment.is_a?(Comment)
 
-      comment_params = comment_params.merge(comment_type: :reply)
+      args = args.merge(comment_type: :reply)
     end
 
-    @comment = Comment.new(comment_params.merge(account: current_user))
+    @comment = Comment.new(args.merge(account: current_user))
+
+    authorize @comment
 
     if @comment.save
       respond_with(@comment, :created)
     else
       render json: { errors: @comment.errors.full_messages }, status: :unprocessable_entity
     end
-  rescue => e
-    puts "Error: #{e.class} - #{e.message}"
   end
 
   def show
@@ -48,12 +50,6 @@ class CommentsController < ApplicationController
 
   def verify_parent_comment(comment_id)
     Comment.find(comment_id)
-  rescue => error
-    respond_not_found(error.message)
-  end
-
-  def verify_account(account_id)
-    Account.find(account_id)
   rescue => error
     respond_not_found(error.message)
   end
