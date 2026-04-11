@@ -6,19 +6,15 @@ class CommentsController < ApplicationController
   end
 
   def create
-    args = comment_params
-    account = verify_account(args[:account_id])
-    return unless account.is_a?(Account)
-
     # Check if reply
-    if args[:parent_id].present?
-      comment = verify_parent_comment(args[:parent_id])
+    if comment_params[:parent_id].present?
+      comment = verify_parent_comment(comment_params[:parent_id])
       return unless comment.is_a?(Comment)
 
-      args = args.merge(comment_type: :reply)
+      comment_params = comment_params.merge(comment_type: :reply)
     end
 
-    @comment = Comment.new(args)
+    @comment = Comment.new(comment_params.merge(account: current_user))
 
     if @comment.save
       respond_with(@comment, :created)
@@ -63,7 +59,7 @@ class CommentsController < ApplicationController
   end
 
   def comment_params
-    params.require(:comment).permit(:content, :account_id, :parent_id)
+    params.require(:comment).permit(:content, :parent_id)
   rescue => error
     respond_with_bad_request(error)
   end
